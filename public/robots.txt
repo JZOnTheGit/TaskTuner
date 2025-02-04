@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard/settings
+
+Sitemap: https://tasktuner.com/sitemap.xml 
