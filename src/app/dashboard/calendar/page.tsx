@@ -316,15 +316,33 @@ export default function CalendarPage() {
             <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">Calendar</h1>
             <p className="text-gray-400">Manage your schedule and events</p>
           </div>
-          <Link
-            href="/dashboard"
-            className="flex items-center text-white/80 hover:text-white transition-colors text-sm sm:text-base mt-4 sm:mt-0"
-          >
-            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            <span className="ml-2">Back to Dashboard</span>
-          </Link>
+          <div className="flex items-center gap-4 mt-4 sm:mt-0">
+            <button
+              onClick={() => {
+                setSelectedEvent({
+                  id: '',
+                  title: '',
+                  start: new Date(),
+                  end: new Date(new Date().setHours(new Date().getHours() + 1)),
+                  description: '',
+                  allDay: false,
+                });
+                setShowEventModal(true);
+              }}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm sm:text-base"
+            >
+              Create Event
+            </button>
+            <Link
+              href="/dashboard"
+              className="flex items-center text-white/80 hover:text-white transition-colors text-sm sm:text-base"
+            >
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              <span className="ml-2">Back to Dashboard</span>
+            </Link>
+          </div>
         </div>
 
         {/* Calendar Container */}
