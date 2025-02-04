@@ -37,19 +37,10 @@ export default function AISuggestionsCard() {
   };
 
   return (
-    <div className="bg-[#1a1d21] rounded-xl p-6 col-span-1">
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="text-xl font-bold text-white">TaskTuner AI Assistant</h2>
-          <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-        </div>
-        <p className="text-sm text-gray-400">
-          Let TaskTuner help you schedule your events intelligently
-        </p>
-      </div>
-      
+    <div className="bg-[#1a1d21] rounded-xl sm:rounded-2xl p-3 sm:p-6">
+      <h2 className="text-lg sm:text-xl font-semibold text-white mb-2 sm:mb-4">
+        AI Suggestions
+      </h2>
       <div className="space-y-4">
         <textarea
           value={prompt}

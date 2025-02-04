@@ -309,139 +309,239 @@ export default function CalendarPage() {
   }, []); // Run once when component mounts
 
   return (
-    <div className="min-h-screen bg-black p-4 sm:p-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
-        <div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">Calendar</h1>
-          <p className="text-gray-400">Manage your schedule and events</p>
-        </div>
-        <Link
-          href="/dashboard"
-          className="flex items-center text-white/80 hover:text-white transition-colors text-sm sm:text-base mt-4 sm:mt-0"
-        >
-          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          <span className="ml-2">Back to Dashboard</span>
-        </Link>
-      </div>
-
-      {/* Calendar Container */}
-      <div className="mx-4 sm:mx-6 bg-[#1a1d21] rounded-xl sm:rounded-2xl p-4 sm:p-6" 
-        style={{ height: 'calc(100vh - 180px)' }}
-      >
-        <Calendar
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          onSelectEvent={handleSelectEvent}
-          onSelectSlot={handleSelectSlot}
-          selectable
-          views={['month', 'week', 'day', 'agenda']}
-          defaultView={Views.MONTH}
-          view={view}
-          date={date}
-          onNavigate={handleNavigate}
-          onView={handleViewChange}
-          style={{ 
-            height: '100%',
-            backgroundColor: '#1a1d21',
-            border: 'none'
-          }}
-          eventPropGetter={() => ({
-            style: {
-              backgroundColor: '#3B82F6',
-              border: 'none',
-              borderRadius: '4px',
-              color: 'white',
-              padding: '2px 8px'
-            }
-          })}
-          messages={{
-            today: 'Today',
-            previous: 'Back',
-            next: 'Next',
-            month: 'Month',
-            week: 'Week',
-            day: 'Day',
-            agenda: 'Agenda'
-          }}
-          components={{
-            toolbar: props => (
-              <div className="rbc-toolbar flex-col sm:flex-row gap-4 sm:gap-0">
-                <span className="rbc-btn-group mb-4 sm:mb-0">
-                  <button type="button" onClick={() => props.onNavigate('TODAY')}>
-                    Today
-                  </button>
-                  <button type="button" onClick={() => props.onNavigate('PREV')}>
-                    Back
-                  </button>
-                  <button type="button" onClick={() => props.onNavigate('NEXT')}>
-                    Next
-                  </button>
-                </span>
-                <span className="rbc-toolbar-label text-base sm:text-lg">{props.label}</span>
-                <span className="rbc-btn-group grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-0">
-                  {[Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA].map(viewName => (
-                    <button
-                      key={viewName}
-                      type="button"
-                      className={viewName === props.view ? 'rbc-active' : ''}
-                      onClick={() => props.onView(viewName)}
-                    >
-                      {viewName.charAt(0).toUpperCase() + viewName.slice(1).toLowerCase()}
-                    </button>
-                  ))}
-                </span>
-              </div>
-            ),
-            agenda: {
-              event: formatAgendaEvent,
-              time: ({ event, label }: any) => (
-                <span className="rbc-agenda-time-cell">
-                  {formatEventTime(event)}
-                </span>
-              )
-            }
-          }}
-        />
-      </div>
-
-      {/* Modals */}
-      {showEventModal && (
-        <EventModal
-          event={selectedEvent}
-          onClose={() => {
-            setShowEventModal(false);
-            setSelectedEvent(null);
-          }}
-          onSave={handleSaveEvent}
-          onDelete={(event) => {
-            setEventToDelete(event);
-            setShowDeleteModal(true);
-          }}
-        />
-      )}
-
-      {showDeleteModal && eventToDelete && (
-        <DeleteConfirmModal
-          eventTitle={eventToDelete.title}
-          onConfirm={() => handleDeleteEvent(eventToDelete.id)}
-          onCancel={() => {
-            setShowDeleteModal(false);
-            setEventToDelete(null);
-          }}
-        />
-      )}
-
-      {loading && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-[#1a1d21] rounded-xl p-6 shadow-xl">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    <div className="min-h-screen bg-black px-1 sm:px-4 lg:px-8 py-4 sm:py-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
+          <div>
+            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">Calendar</h1>
+            <p className="text-gray-400">Manage your schedule and events</p>
           </div>
+          <Link
+            href="/dashboard"
+            className="flex items-center text-white/80 hover:text-white transition-colors text-sm sm:text-base mt-4 sm:mt-0"
+          >
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span className="ml-2">Back to Dashboard</span>
+          </Link>
         </div>
-      )}
+
+        {/* Calendar Container */}
+        <div 
+          className="mx-4 sm:mx-6 bg-[#1a1d21] rounded-xl sm:rounded-2xl p-4 sm:p-6 overflow-hidden" 
+          style={{ height: 'calc(100vh - 200px)' }}
+        >
+          <Calendar
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            onSelectEvent={handleSelectEvent}
+            onSelectSlot={handleSelectSlot}
+            selectable
+            views={['month', 'week', 'day', 'agenda']}
+            defaultView={Views.MONTH}
+            view={view}
+            date={date}
+            onNavigate={handleNavigate}
+            onView={handleViewChange}
+            style={{ 
+              height: '100%',
+              backgroundColor: '#1a1d21',
+              border: 'none',
+              maxHeight: '100%'
+            }}
+            eventPropGetter={() => ({
+              style: {
+                backgroundColor: '#3B82F6',
+                border: 'none',
+                borderRadius: '4px',
+                color: 'white',
+                padding: '2px 8px'
+              }
+            })}
+            messages={{
+              today: 'Today',
+              previous: 'Back',
+              next: 'Next',
+              month: 'Month',
+              week: 'Week',
+              day: 'Day',
+              agenda: 'Agenda'
+            }}
+            components={{
+              toolbar: props => (
+                <div className="rbc-toolbar flex-col sm:flex-row gap-4 sm:gap-0">
+                  <span className="rbc-btn-group mb-4 sm:mb-0">
+                    <button type="button" onClick={() => props.onNavigate('TODAY')}>
+                      Today
+                    </button>
+                    <button type="button" onClick={() => props.onNavigate('PREV')}>
+                      Back
+                    </button>
+                    <button type="button" onClick={() => props.onNavigate('NEXT')}>
+                      Next
+                    </button>
+                  </span>
+                  <span className="rbc-toolbar-label text-base sm:text-lg">{props.label}</span>
+                  <span className="rbc-btn-group grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-0">
+                    {[Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA].map(viewName => (
+                      <button
+                        key={viewName}
+                        type="button"
+                        className={viewName === props.view ? 'rbc-active' : ''}
+                        onClick={() => props.onView(viewName)}
+                      >
+                        {viewName.charAt(0).toUpperCase() + viewName.slice(1).toLowerCase()}
+                      </button>
+                    ))}
+                  </span>
+                </div>
+              ),
+              agenda: {
+                event: formatAgendaEvent,
+                time: ({ event, label }: any) => (
+                  <span className="rbc-agenda-time-cell">
+                    {formatEventTime(event)}
+                  </span>
+                )
+              }
+            }}
+          />
+        </div>
+
+        {/* Modals */}
+        {showEventModal && (
+          <EventModal
+            event={selectedEvent}
+            onClose={() => {
+              setShowEventModal(false);
+              setSelectedEvent(null);
+            }}
+            onSave={handleSaveEvent}
+            onDelete={(event) => {
+              setEventToDelete(event);
+              setShowDeleteModal(true);
+            }}
+          />
+        )}
+
+        {showDeleteModal && eventToDelete && (
+          <DeleteConfirmModal
+            eventTitle={eventToDelete.title}
+            onConfirm={() => handleDeleteEvent(eventToDelete.id)}
+            onCancel={() => {
+              setShowDeleteModal(false);
+              setEventToDelete(null);
+            }}
+          />
+        )}
+
+        {loading && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-[#1a1d21] rounded-xl p-6 shadow-xl">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            </div>
+          </div>
+        )}
+
+        {/* Calendar styles */}
+        <style jsx global>{`
+          .rbc-calendar {
+            min-height: auto;
+            height: 100%;
+            background: #1a1d21;
+            padding: 0.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            flex-direction: column;
+          }
+
+          .rbc-calendar .rbc-toolbar {
+            flex-shrink: 0;
+          }
+
+          .rbc-calendar .rbc-month-view,
+          .rbc-calendar .rbc-agenda-view,
+          .rbc-calendar .rbc-time-view {
+            flex: 1;
+            min-height: 0;
+          }
+
+          @media (min-width: 640px) {
+            .rbc-calendar {
+              padding: 1rem;
+              border-radius: 1rem;
+            }
+          }
+
+          /* Make agenda view scrollable horizontally on mobile */
+          @media (max-width: 639px) {
+            .rbc-agenda-view {
+              overflow-x: auto;
+              -webkit-overflow-scrolling: touch;
+            }
+
+            .rbc-agenda-view table.rbc-agenda-table {
+              font-size: 0.75rem; /* Even smaller font */
+              min-width: 500px; /* Ensure minimum width for content */
+            }
+
+            .rbc-agenda-view table.rbc-agenda-table thead > tr > th,
+            .rbc-agenda-view table.rbc-agenda-table tbody > tr > td {
+              padding: 0.25rem;
+              white-space: nowrap;
+            }
+
+            .rbc-agenda-date-cell,
+            .rbc-agenda-time-cell {
+              font-size: 0.7rem;
+              min-width: 80px;
+            }
+
+            .rbc-agenda-event-cell {
+              font-size: 0.75rem;
+              min-width: 200px;
+            }
+
+            /* Add visual indicator for scroll */
+            .rbc-agenda-content {
+              position: relative;
+            }
+
+            .rbc-agenda-content::after {
+              content: '';
+              position: absolute;
+              right: 0;
+              top: 0;
+              bottom: 0;
+              width: 20px;
+              background: linear-gradient(to right, transparent, rgba(26, 29, 33, 0.5));
+              pointer-events: none;
+            }
+          }
+
+          /* Adjust month view for mobile */
+          @media (max-width: 639px) {
+            .rbc-month-view {
+              font-size: 0.75rem;
+            }
+
+            .rbc-header {
+              padding: 0.25rem;
+            }
+
+            .rbc-date-cell {
+              padding: 0.125rem;
+            }
+
+            .rbc-event {
+              padding: 0.125rem 0.25rem;
+            }
+          }
+        `}</style>
+      </div>
     </div>
   );
 } 
