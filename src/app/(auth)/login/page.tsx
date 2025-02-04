@@ -13,9 +13,4 @@ export default function LoginPage() {
       <LoginContent />
     </Suspense>
   );
-}
-
-export const metadata = {
-  title: 'Login - TaskTuner',
-  description: 'Sign in to your TaskTuner account to manage your calendar and events.',
 } 
