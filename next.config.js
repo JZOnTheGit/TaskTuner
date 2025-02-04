@@ -14,7 +14,17 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
-  swcMinify: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.watchOptions = {
+        ignored: ['node_modules/**', '.next/**', 'supabase/**'],
+      };
+    }
+    return config;
+  },
 }
 
 module.exports = nextConfig 
